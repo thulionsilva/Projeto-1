@@ -13,46 +13,51 @@ import seaborn as sns
 from datetime import datetime
 import matplotlib.dates as mdates
 
+''' Creating the objects '''
 ETH = sl.OALL(pd.read_csv("ETHUSD.csv"))
 IBV = sl.OALL(pd.read_csv("IBOVESPA.csv"))
 NDQ = sl.OALL(pd.read_csv("NASDAQ.csv"))
-df1 = ETH.df
-df2 = IBV.df
-df3 = NDQ.df
 
+''' Calling function that treat the dataframe '''
 sl.do_all(ETH, IBV, NDQ)
 
-print(ETH.df.head(10))
-print(IBV.df.columns)
-
 #fig,ax = plt.subplots()
-type(ETH.df.iloc[1,-2])
 #ax.scatter(ETH.df['Vol.'],ETH.df['Var%'])
+
+''' Normalizando os dados '''
+ETH.df[['Último_norm','Abertura_norm','Máxima_norm','Mínima_norm']] = ETH.df.iloc[:,0:4].apply(lambda col: col/ETH.df.iloc[0,1]*100)
+IBV.df[['Último_norm','Abertura_norm','Máxima_norm','Mínima_norm']] = IBV.df.iloc[:,0:4].apply(lambda col: col/IBV.df.iloc[0,1]*100)
+NDQ.df[['Último_norm','Abertura_norm','Máxima_norm','Mínima_norm']] = NDQ.df.iloc[:,0:4].apply(lambda col: col/NDQ.df.iloc[0,1]*100)
+
+''' Criando retorno diario '''
+ETH.df["Retorno%"] = (ETH.df.Último/ETH.df.Último.shift(1) - 1)*100
+ETH.df["Retorno%"][0] = 0
+
+IBV.df["Retorno%"] = (IBV.df.Último/IBV.df.Último.shift(1) - 1)*100
+IBV.df["Retorno%"][0] = 0
+
+NDQ.df["Retorno%"] = (NDQ.df.Último/NDQ.df.Último.shift(1) - 1)*100
+NDQ.df["Retorno%"][0] = 0
+
+'''Aplitute entre máximo e mínimo '''
+ETH.df["Aplitude_max_mix_diário"] = abs(ETH.df['Máxima'] - ETH.df['Mínima'])
+IBV.df["Aplitude_max_mix_diário"] = abs(IBV.df['Máxima'] - IBV.df['Mínima'])
+NDQ.df["Aplitude_max_mix_diário"] = abs(NDQ.df['Máxima'] - NDQ.df['Mínima'])
+
+ETH.df.resample('Y').max().Máxima - ETH.df.resample('Y').min().Mínima
+
+df1['col2'] = ETH.df["Retorno%"].resample('Y').mean().asfreq('D').bfill()
+
+ETH.df["Retorno%"].resample('Y').mean()
+ETH.df["Retorno%"].resample('Y').var()
+ETH.df["Retorno%"].resample('Y').std()
+
+
+ETH.df["Retorno%"].resample('Y').get_group(pd.to_datetime("2017-12-31 00:00:00"))
+
 df1 = ETH.df
 df2 = IBV.df
 df3 = NDQ.df
-
-
-
-df1 = df1.applymap(sl.conv)
-
-
-
-
-
-
-
-
-'''
-older_date = [df1.index[0],df2.index[0],df3.index[0]]
-older_date.sort()
-older_date[-1]
-df1_new = df1[df1.index >= older_date[-1]]
-df2_new = df2[df2.index >= older_date[-1]]
-df3_new = df3[df3.index >= older_date[-1]]
-latest_date = [df1.index[-1],df2.index[-1],df3.index[-1]]
-latest_date.sort()
-'''
 
 #ax.set_xticklabels()
 #ax.xaxis.set_major_locator(mdates.MonthLocator(interval=5))

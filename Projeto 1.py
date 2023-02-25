@@ -59,6 +59,8 @@ df1 = ETH.df
 df2 = IBV.df
 df3 = NDQ.df
 
+
+
 #ax.set_xticklabels()
 #ax.xaxis.set_major_locator(mdates.MonthLocator(interval=5))
 #ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))

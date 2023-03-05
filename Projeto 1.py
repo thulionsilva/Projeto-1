@@ -14,9 +14,9 @@ from datetime import datetime
 import matplotlib.dates as mdates
 
 ''' Creating the objects '''
-ETH = sl.OALL(pd.read_csv("ETHUSD.csv"))
-IBV = sl.OALL(pd.read_csv("IBOVESPA.csv"))
-NDQ = sl.OALL(pd.read_csv("NASDAQ.csv"))
+ETH = sl.DataFrame_treating(pd.read_csv("ETHUSD.csv"))
+IBV = sl.DataFrame_treating(pd.read_csv("IBOVESPA.csv"))
+NDQ = sl.DataFrame_treating(pd.read_csv("NASDAQ.csv"))
 
 ''' Calling function that treat the dataframe '''
 sl.do_all(ETH, IBV, NDQ)
@@ -46,7 +46,7 @@ NDQ.df["Aplitude_max_mix_diário"] = abs(NDQ.df['Máxima'] - NDQ.df['Mínima'])
 
 ETH.df.resample('Y').max().Máxima - ETH.df.resample('Y').min().Mínima
 
-df1['col2'] = ETH.df["Retorno%"].resample('Y').mean().asfreq('D').bfill()
+ETH.df['col2'] = ETH.df["Retorno%"].resample('Y').mean().asfreq('D').bfill()
 
 ETH.df["Retorno%"].resample('Y').mean()
 ETH.df["Retorno%"].resample('Y').var()
@@ -64,9 +64,9 @@ df3 = NDQ.df
 #ax.set_xticklabels()
 #ax.xaxis.set_major_locator(mdates.MonthLocator(interval=5))
 #ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
-ax.yaxis.set_visible(False)
-ax.xaxis.set(ticks=range(1,1500,100))
-plt.show()
+# ax.yaxis.set_visible(False)
+# ax.xaxis.set(ticks=range(1,1500,100))
+# plt.show()
 
 #sns.lineplot(data=ETH.df,x=ETH.df.index, y="Vol.",hue="Var%", style="Var%")
 

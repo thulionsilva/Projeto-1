@@ -26,10 +26,10 @@ def do_all(ETH,IBV,NDQ):
     IBV.df = IBV.df.applymap(convert_values_to_float)
     NDQ.df = NDQ.df.applymap(convert_values_to_float)
     #Fill void
+    
     ETH.fill_void()
     IBV.fill_void()
     NDQ.fill_void()
-
 
 ''' ----------------------------------------------------------------------- '''
 
